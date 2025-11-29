@@ -1,0 +1,45 @@
+name: Staple and Validate macOS App
+
+# manuell
+on:
+  workflow_dispatch:
+    inputs:
+      app_path:
+        description: 'Pfad zur notarized .app (relativ zum Repo)'
+        required: true
+        default: 'builds/SystemStatusChecker.app'
+
+jobs:
+  staple:
+    runs-on: macos-latest
+
+    steps:
+      # 1. Repository checkout
+      - uses: actions/checkout@v4
+
+      # 2. Xcode CLI Tools activate
+      - name: Select Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      # 3. Run Staple
+      - name: Staple and Validate Notarized App
+        run: |
+          echo "Stapling ${{ github.event.inputs.app_path }} ..."
+          xcrun stapler staple "${{ github.event.inputs.app_path }}"
+          echo "Stapling finished."
+          echo "Validate ${{ github.event.inputs.app_path }} ..."
+          xcrun stapler validate "${{ github.event.inputs.app_path }}"
+          echo "Validate finished."
+
+
+      # 4. App zippen für Download
+      - name: Zip stapled app
+        run: |
+          zip -r stapled_app.zip "${{ github.event.inputs.app_path }}"
+
+      # 5. Artifact hochladen
+      - name: Upload stapled app
+        uses: actions/upload-artifact@v4
+        with:
+          name: stapled-app
+          path: stapled_app.zip
