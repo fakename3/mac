@@ -7,7 +7,7 @@ on:
       app_path:
         description: 'Pfad zur notarized .app (relativ zum Repo)'
         required: true
-        default: 'SystemStatusChecker.app'
+        default: 'builds/SystemStatusChecker.app'
 
 jobs:
   staple:
