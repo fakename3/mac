@@ -21,12 +21,14 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
-      # 3. Staple ausführen
-      - name: Staple Notarized App
-        run: |
-          echo "Stapling ${{ github.event.inputs.app_path }} ..."
-          xcrun stapler staple "${{ github.event.inputs.app_path }}"
-          echo "Stapling finished."
+      # 3. Staple und validierung ausführen
+      - name: Staple and Validate Notarized App or Package
+      run: |
+        echo "Stapling ${{ github.event.inputs.app_path }} ..."
+        xcrun stapler staple builds/SystemStatusChecker.app
+        echo "Validate ${{ github.event.inputs.app_path }} ..."
+        xcrun stapler validate builds/SystemStatusChecker.app
+        echo "Stapling and validate finished."
 
       # 4. App zippen für Download
       - name: Zip stapled app
