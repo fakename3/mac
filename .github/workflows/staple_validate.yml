@@ -33,13 +33,13 @@ jobs:
 
 
       # 4. App zippen für Download
-      #- name: Zip stapled app
-      #  run: |
-      #    zip -r stapled_app.zip "${{ github.event.inputs.app_path }}"
+      - name: Zip stapled app
+        run: |
+          zip -r stapled_app.zip "${{ github.event.inputs.app_path }}"
 
       # 5. Artifact hochladen
       - name: Upload stapled app
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: stapled-app
-          path: ${{ github.event.inputs.app_path }}"
+          path: stapled_app.zip
